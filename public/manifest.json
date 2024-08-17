@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "YouTune",
+  "version": "1.0.0",
+  "description": "A browser extension to enhance and customize your YouTube experience",
+  "permissions": ["activeTab", "storage"],
+  "icons": {
+    "16": "icons/16.png",
+    "24": "icons/24.png",
+    "32": "icons/32.png"
+  },
+  "action": {
+    "default_title": "YouTune - Tune Your YouTube",
+    "default_popup": "index.html",
+    "default_icon": {
+      "16": "icons/16.png",
+      "24": "icons/24.png",
+      "32": "icons/32.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://www.youtube.com/*", "*://youtube.com/*"],
+      "js": ["src/inject.ts"],
+      "run_at": "document_start"
+    }
+  ]
+}
