@@ -2,16 +2,16 @@
 
 declare module "*?script&module";
 
-declare type youtuneData = {
+declare type youboostData = {
   quality: youtube.VideoQuality;
   rate: number;
   step: number;
   seek: number;
 };
 
-declare type partialYoutuneData = Partial<youtuneData>;
+declare type partialYouboostData = Partial<youboostData>;
 
-declare type extendedYoutuneData = youtuneData & { type: youtube.PlayerType };
+declare type extendedYouboostData = youboostData & { type: youtube.PlayerType };
 
 declare namespace youtube {
   export type VideoQuality = VideoQualityAuto | VideoQualityTiny | VideoQualitySmall | VideoQualityMedium | VideoQualityLarge | VideoQualityHD720 | VideoQualityHD1080 | VideoQualityHD1440 | VideoQuality4K2160 | VideoQuality8K4320;

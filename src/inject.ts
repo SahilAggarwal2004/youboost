@@ -11,7 +11,7 @@ script.src = chrome.runtime.getURL(scriptSrc);
 script.type = "module";
 document.head.prepend(script);
 
-console.log("YouTune activated");
+console.log("YouBoost activated");
 
 window.addEventListener("yt-navigate-finish", async () => {
   let type: youtube.PlayerType | undefined;
@@ -22,14 +22,14 @@ window.addEventListener("yt-navigate-finish", async () => {
   const rate = await getStorage("rate", defaultRate);
   const step = await getStorage("step", defaultStep);
   const seek = await getStorage("seek", defaultSeek);
-  window.dispatchEvent(new CustomEvent<extendedYoutuneData>("initData", { detail: { quality, rate, step, seek, type } }));
+  window.dispatchEvent(new CustomEvent<extendedYouboostData>("initData", { detail: { quality, rate, step, seek, type } }));
 });
 
-window.addEventListener("dataChangedKey", (({ detail }: CustomEvent<partialYoutuneData>) => {
-  chrome.runtime.sendMessage<partialYoutuneData>(detail);
+window.addEventListener("dataChangedKey", (({ detail }: CustomEvent<partialYouboostData>) => {
+  chrome.runtime.sendMessage<partialYouboostData>(detail);
   setData(detail);
 }) as EventListener);
 
-chrome.runtime.onMessage.addListener((detail: partialYoutuneData) => {
-  window.dispatchEvent(new CustomEvent<partialYoutuneData>("dataChangedUI", { detail }));
+chrome.runtime.onMessage.addListener((detail: partialYouboostData) => {
+  window.dispatchEvent(new CustomEvent<partialYouboostData>("dataChangedUI", { detail }));
 });

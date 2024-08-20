@@ -22,18 +22,18 @@ export default function App() {
   }, [rate, step]);
   const rateOptions = useMemo(() => arrToOptions(rates, rateToLabel), [rates]);
 
-  function setState({ quality, rate, step, seek }: partialYoutuneData) {
+  function setState({ quality, rate, step, seek }: partialYouboostData) {
     if (quality) setQuality(quality);
     if (rate) setRate(rate);
     if (step) setStep(step);
     if (seek) setSeek(seek);
   }
 
-  function updateData(data: partialYoutuneData) {
+  function updateData(data: partialYouboostData) {
     setData(data);
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const { id } = tabs[0];
-      if (id) chrome.tabs.sendMessage<partialYoutuneData>(id, data);
+      if (id) chrome.tabs.sendMessage<partialYouboostData>(id, data);
     });
     setState(data);
   }
@@ -50,10 +50,10 @@ export default function App() {
   return (
     <div className="p-3 pb-4 space-y-5 text-white text-sm">
       <div className="grid grid-cols-4 items-center px-2">
-        <img src="logo.png" alt="YouTune logo" className="self" />
+        <img src="logo.png" alt="YouBoost logo" className="self" />
         <div className="col-span-3 text-center space-y-0.5">
-          <h2 className="text-2xl">YouTune</h2>
-          <h4 className="text-xs">Tune Your YouTube</h4>
+          <h2 className="text-2xl">YouBoost</h2>
+          <h4 className="text-xs">Boost Your YouTube</h4>
         </div>
       </div>
       <Header text="Settings" />

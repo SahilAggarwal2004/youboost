@@ -12,7 +12,7 @@ export async function resetStorage() {
   chrome.storage.local.clear();
 }
 
-export async function setData({ quality, rate, step, seek }: partialYoutuneData) {
+export async function setData({ quality, rate, step, seek }: partialYouboostData) {
   if (quality) setStorage("quality", quality);
   if (rate) setStorage("rate", rate);
   if (step) setStorage("step", step);
