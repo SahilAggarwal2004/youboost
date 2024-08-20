@@ -11,7 +11,7 @@
     "128": "icons/128.png"
   },
   "action": {
-    "default_title": "YouBoost - Boost Your YouTube",
+    "default_title": "YouBoost - Boost Your YouTube Experience",
     "default_popup": "index.html",
     "default_icon": {
       "16": "icons/16.png",

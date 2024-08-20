@@ -53,7 +53,7 @@ export default function App() {
         <img src="logo.png" alt="YouBoost logo" className="self" />
         <div className="col-span-3 text-center space-y-0.5">
           <h2 className="text-2xl">YouBoost</h2>
-          <h4 className="text-xs">Boost Your YouTube</h4>
+          <h4 className="text-xs">Boost Your YouTube Experience</h4>
         </div>
       </div>
       <Header text="Settings" />
