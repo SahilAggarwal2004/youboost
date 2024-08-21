@@ -3,7 +3,7 @@
   "name": "YouBoost",
   "version": "1.0.0",
   "description": "A browser extension to enhance and customize your YouTube experience",
-  "permissions": ["activeTab", "storage"],
+  "permissions": ["storage"],
   "icons": {
     "16": "icons/16.png",
     "24": "icons/24.png",
