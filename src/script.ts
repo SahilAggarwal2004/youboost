@@ -4,7 +4,7 @@ import { rateToLabel, round } from "./modules/functions";
 type Player = (HTMLElement & youtube.Player) | null;
 type Key = "Control" | "<" | ">" | "," | "." | "Alt" | "ArrowLeft" | "ArrowRight" | number;
 
-let timeout = 0;
+let timeout: NodeJS.Timeout;
 let onDataChange: EventListener = () => {};
 
 window.addEventListener("initData", (({ detail: { quality, rate, step, seek, type } }: CustomEvent<extendedYouboostData>) => {
