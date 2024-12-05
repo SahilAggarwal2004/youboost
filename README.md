@@ -12,6 +12,7 @@ Take your YouTube experience to the next level with YouBoost! This powerful exte
   - Press **Alt + (0-9)** to select video quality.
   - Press **Ctrl + ,/.** to adjust video quality.
   - Press **Ctrl + </>** to change playback speed.
+  - Press **</>** to change playback speed temporarily.
   - Press **←/→** to seek in YouTube Shorts.
 
 Want to see the source code or contribute? Check out our [GitHub repository](https://github.com/SahilAggarwal2004/youboost).

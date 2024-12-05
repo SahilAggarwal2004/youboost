@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useMemo, useState } from "react";
 import { getStorage, setData } from "./modules/storage";
 import { defaultQuality, defaultRate, defaultSeek, defaultStep, maxRate, minRate, qualityLabels, qualityOptions, seekOptions, stepOptions } from "./constants";
@@ -73,6 +72,9 @@ export default function App() {
         </div>
         <div>
           Press <span className="font-semibold">{"Ctrl + </>"}</span> to change playback speed.
+        </div>
+        <div>
+          Press <span className="font-semibold">{"</>"}</span> to change playback speed temporarily.
         </div>
         <div>
           Press <span className="font-semibold">←/→</span> to seek in YouTube Shorts.
