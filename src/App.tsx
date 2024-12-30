@@ -6,7 +6,7 @@ import { arrToOptions, rateToLabel, round, timeToLabel } from "./modules/functio
 import Header from "./components/Header";
 
 export default function App() {
-  const [quality, setQuality] = useState<youtube.VideoQuality>(defaultQuality);
+  const [quality, setQuality] = useState(defaultQuality);
   const [rate, setRate] = useState(defaultRate);
   const [step, setStep] = useState(defaultStep);
   const [seek, setSeek] = useState(defaultSeek);
@@ -38,7 +38,7 @@ export default function App() {
   }
 
   useEffect(() => {
-    getStorage<youtube.VideoQuality>("quality", defaultQuality).then(setQuality);
+    getStorage("quality", defaultQuality).then(setQuality);
     getStorage("rate", defaultRate).then(setRate);
     getStorage("step", defaultStep).then(setStep);
     getStorage("seek", defaultSeek).then(setSeek);
