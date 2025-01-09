@@ -1,6 +1,6 @@
 {
   "name": "youboost",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A browser extension to enhance and customize your YouTube experience",
   "author": "Sahil Aggarwal <aggarwalsahil2004@gmail.com>",
   "license": "MIT",
@@ -22,11 +22,11 @@
     "react-select": "^5.9.0"
   },
   "devDependencies": {
-    "@crxjs/vite-plugin": "^2.0.0-beta.28",
+    "@crxjs/vite-plugin": "2.0.0-beta.30",
     "@eslint/js": "^9.17.0",
-    "@types/chrome": "^0.0.287",
-    "@types/node": "^22.10.2",
-    "@types/react": "^19.0.2",
+    "@types/chrome": "^0.0.292",
+    "@types/node": "^22.10.5",
+    "@types/react": "^19.0.4",
     "@types/react-dom": "^19.0.2",
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.20",
@@ -37,8 +37,8 @@
     "globals": "^15.14.0",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5.7.2",
-    "typescript-eslint": "^8.18.2",
-    "vite": "^6.0.6"
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.19.1",
+    "vite": "^6.0.7"
   }
 }
