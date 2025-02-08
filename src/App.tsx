@@ -80,7 +80,7 @@ export default function App() {
           Press <span className="font-semibold">←/→</span> to seek in YouTube Shorts.
         </div>
       </div>
-      <button className="block mx-auto bg-[red] py-1 px-2.5 rounded-sm border border-white hover:bg-[rgba(255,0,0,0.6)]" onClick={() => updateData({ quality: defaultQuality, rate: defaultRate, step: defaultStep, seek: defaultSeek })}>
+      <button className="block mx-auto bg-[red] py-1 px-2.5 rounded-xs border border-white hover:bg-[rgba(255,0,0,0.6)]" onClick={() => updateData({ quality: defaultQuality, rate: defaultRate, step: defaultStep, seek: defaultSeek })}>
         Reset
       </button>
     </div>
