@@ -1,13 +1,13 @@
-import { defaultQuality, numberOfQualities, qualities, qualityLabels } from "./constants";
+import { qualityConfig } from "./constants";
 import { rateToLabel, round } from "./modules/functions";
-
-type Player = (HTMLElement & youtube.Player) | null;
-type Key = "Control" | "<" | ">" | "," | "." | "Alt" | "ArrowLeft" | "ArrowRight" | number;
+import { Key, Player } from "./types/global";
+import { youboost } from "./types/youboost";
+import { youtube } from "./types/youtube";
 
 let timeout: NodeJS.Timeout;
 let onDataChange: EventListener = () => {};
 
-window.addEventListener("initData", (({ detail: { quality, rate, step, seek, type } }: CustomEvent<extendedYouboostData>) => {
+window.addEventListener("initData", (({ detail: { quality, rate, seek, step, type } }: CustomEvent<youboost.extendedData>) => {
   const player = document.getElementById(type) as Player;
   if (!player) return;
 
@@ -17,7 +17,7 @@ window.addEventListener("initData", (({ detail: { quality, rate, step, seek, typ
   const textWrapper = textElement.parentElement!.parentElement!;
   const icon = document.querySelector(".ytp-bezel")! as HTMLDivElement;
   const keys: { [key in Key]?: boolean } = {};
-  let qualityIndex = qualities.indexOf(quality);
+  let qualityIndex = qualityConfig.values.indexOf(quality);
 
   function displayText(text: string) {
     textElement.innerText = text;
@@ -34,7 +34,7 @@ window.addEventListener("initData", (({ detail: { quality, rate, step, seek, typ
   function changeRate(difference: number) {
     rate += difference;
     rate = Math.min(Math.max(round(rate), 0.25), 3);
-    window.dispatchEvent(new CustomEvent<partialYouboostData>("dataChangedKey", { detail: { rate } }));
+    window.dispatchEvent(new CustomEvent<youboost.partialData>("dataChangedKey", { detail: { rate } }));
     displayText(rateToLabel(rate));
     video.playbackRate = rate;
   }
@@ -42,14 +42,15 @@ window.addEventListener("initData", (({ detail: { quality, rate, step, seek, typ
   function changeQuality(quality: youtube.VideoQuality): void;
   function changeQuality(step: number): void;
   function changeQuality(quality: youtube.VideoQuality | number) {
+    const { default: defaultQuality, labels, total, values } = qualityConfig;
     if (typeof quality === "string") {
-      qualityIndex = qualities.indexOf(quality);
+      qualityIndex = values.indexOf(quality);
     } else if (typeof quality === "number") {
-      qualityIndex = (qualityIndex + quality + numberOfQualities) % numberOfQualities;
-      quality = qualities[qualityIndex];
+      qualityIndex = (qualityIndex + quality + total) % total;
+      quality = values[qualityIndex];
     }
-    window.dispatchEvent(new CustomEvent<partialYouboostData>("dataChangedKey", { detail: { quality } }));
-    displayText(qualityLabels[quality]);
+    window.dispatchEvent(new CustomEvent<youboost.partialData>("dataChangedKey", { detail: { quality } }));
+    displayText(labels[quality]);
     if (!availableQualities.includes(quality)) quality = defaultQuality;
     player!.setPlaybackQualityRange(quality, quality);
   }
@@ -63,25 +64,25 @@ window.addEventListener("initData", (({ detail: { quality, rate, step, seek, typ
       else if (keys[">"]) changeRate(step);
     } else if (keys["Alt"]) {
       const key = +event.key;
-      if (key) changeQuality(qualities[key]);
+      if (key) changeQuality(qualityConfig.values[key]);
     } else if (type === "shorts-player") {
       if (keys["ArrowLeft"]) player!.seekBy(-seek);
       else if (keys["ArrowRight"]) player!.seekBy(seek);
     }
   }
 
-  onDataChange = (({ detail }: CustomEvent<partialYouboostData>) => {
+  onDataChange = (({ detail }: CustomEvent<youboost.partialData>) => {
     if (detail.quality) {
       quality = detail.quality;
-      qualityIndex = qualities.indexOf(quality);
+      qualityIndex = qualityConfig.values.indexOf(quality);
       player!.setPlaybackQualityRange(quality, quality);
     }
     if (detail.rate) {
       rate = detail.rate;
       video.playbackRate = rate;
     }
-    if (detail.step) step = detail.step;
     if (detail.seek) seek = detail.seek;
+    if (detail.step) step = detail.step;
   }) as EventListener;
 
   window.addEventListener("dataChangedUI", onDataChange);

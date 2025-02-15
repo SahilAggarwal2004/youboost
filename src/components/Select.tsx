@@ -1,12 +1,5 @@
 import ReactSelect from "react-select";
-
-type SelectProps<T> = {
-  text: string;
-  options: { value: T; label: string }[];
-  value: T;
-  label: string;
-  onChange: (value: { value: T; label: string } | null) => void;
-};
+import { SelectProps } from "../types/global";
 
 export default function Select<T>({ text, options, value, label, onChange }: SelectProps<T>) {
   return (

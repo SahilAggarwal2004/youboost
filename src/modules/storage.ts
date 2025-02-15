@@ -1,3 +1,5 @@
+import { youboost } from "../types/youboost";
+
 export function setStorage<T>(key: string, value: T) {
   chrome.storage.local.set({ [key]: value });
 }
@@ -12,9 +14,9 @@ export async function resetStorage() {
   chrome.storage.local.clear();
 }
 
-export async function setData({ quality, rate, step, seek }: partialYouboostData) {
+export async function setData({ quality, rate, seek, step }: youboost.partialData) {
   if (quality) setStorage("quality", quality);
   if (rate) setStorage("rate", rate);
-  if (step) setStorage("step", step);
   if (seek) setStorage("seek", seek);
+  if (step) setStorage("step", step);
 }

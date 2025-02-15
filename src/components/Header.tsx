@@ -1,4 +1,4 @@
-type HeaderProps = { text: string };
+import { HeaderProps } from "../types/global";
 
 export default function Header({ text }: HeaderProps) {
   return (
