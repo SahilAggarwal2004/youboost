@@ -14,9 +14,9 @@ const icons = {
   "24": "icons/24.png",
   "32": "icons/32.png",
   "128": "icons/128.png",
-};
+} as const;
 
-export default defineManifest(async () => ({
+export default defineManifest({
   manifest_version: 3,
   name: "YouBoost",
   version: `${major}.${minor}.${patch}`,
@@ -37,4 +37,4 @@ export default defineManifest(async () => ({
       run_at: "document_start",
     },
   ],
-}));
+});

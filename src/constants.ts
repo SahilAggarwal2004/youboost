@@ -16,7 +16,7 @@ const qualityLabels: QualityLabels = {
 
 export const qualityConfig = createQualityConfig(qualityLabels);
 
-export const rateConfig = { default: 1, max: 3, min: 0.25 };
+export const rateConfig = { default: 1, max: 4, min: 0.25 };
 
 export const seekConfig = createSeekConfig([5, 4.5, 4, 3.5, 3, 2.5, 2, 1.5, 1, 0.5], 2);
 
