@@ -1,3 +1,4 @@
+import { rateConfig } from "../constants";
 import { youtube } from "./youtube";
 
 export namespace youboost {
@@ -8,7 +9,10 @@ export namespace youboost {
     step: number;
   };
 
-  export type extendedData = data & { type: youtube.PlayerType };
+  export type extendedData = data & {
+    rateConfig: typeof rateConfig;
+    type: youtube.PlayerType;
+  };
 
   export type partialData = Partial<data>;
 }

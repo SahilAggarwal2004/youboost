@@ -6,12 +6,7 @@ import { defineConfig } from "vite";
 import manifest from "./manifest.config";
 
 // https://vitejs.dev/config/
-export default defineConfig(() => {
-  return {
-    plugins: [tailwindcss(), react(), crx({ manifest })],
-    server: { port: 3000 },
-    legacy: {
-      skipWebSocketTokenCheck: true, // REMOVE IT WHEN ITS FIXED LATER
-    },
-  };
+export default defineConfig({
+  plugins: [tailwindcss(), react(), crx({ manifest })],
+  server: { port: 3000 },
 });

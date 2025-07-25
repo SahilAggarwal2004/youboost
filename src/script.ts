@@ -7,7 +7,7 @@ import { youtube } from "./types/youtube";
 let timeout: NodeJS.Timeout;
 let onDataChange: EventListener = () => {};
 
-window.addEventListener("initData", (({ detail: { quality, rate, seek, step, type } }: CustomEvent<youboost.extendedData>) => {
+window.addEventListener("initData", (({ detail: { quality, rate, rateConfig, seek, step, type } }: CustomEvent<youboost.extendedData>) => {
   const player = document.getElementById(type) as Player;
   if (!player) return;
 
@@ -33,7 +33,7 @@ window.addEventListener("initData", (({ detail: { quality, rate, seek, step, typ
 
   function changeRate(difference: number) {
     rate += difference;
-    rate = Math.min(Math.max(round(rate), 0.25), 3);
+    rate = Math.min(Math.max(round(rate), rateConfig.min), rateConfig.max);
     window.dispatchEvent(new CustomEvent<youboost.partialData>("dataChangedKey", { detail: { rate } }));
     displayText(rateToLabel(rate));
     video.playbackRate = rate;

@@ -1,6 +1,8 @@
 import { createQualityConfig, createSeekConfig, createStepConfig } from "./modules/functions";
 import { QualityLabels } from "./types/global";
 
+export const matchPatterns = ["*://www.youtube.com/*"];
+
 const qualityLabels: QualityLabels = {
   auto: "Auto",
   hd4320: "4320p (8K)",

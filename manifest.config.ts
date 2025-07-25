@@ -1,5 +1,7 @@
 import { defineManifest } from "@crxjs/vite-plugin";
+import { matchPatterns } from "./src/constants";
 import packageJson from "./package.json";
+
 const { version } = packageJson;
 
 // Convert from Semver (example: 0.1.0-beta6)
@@ -23,16 +25,18 @@ export default defineManifest({
   // semver is OK in "version_name"
   version_name: version,
   description: "A browser extension to enhance and customize your YouTube experience",
-  permissions: ["storage"],
+  permissions: ["storage", "scripting", "tabs"],
+  host_permissions: matchPatterns,
   icons,
   action: {
     default_title: "YouBoost - Boost Your YouTube Experience",
     default_popup: "index.html",
     default_icon: icons,
   },
+  background: { service_worker: "src/background.ts" },
   content_scripts: [
     {
-      matches: ["*://www.youtube.com/*"],
+      matches: matchPatterns,
       js: ["src/inject.ts"],
       run_at: "document_start",
     },

@@ -15,17 +15,22 @@ document.head.prepend(script);
 
 console.log("YouBoost activated");
 
-window.addEventListener("yt-navigate-finish", async () => {
+async function dispatchInitData() {
   let type: youtube.PlayerType | undefined;
   if (window.location.pathname.startsWith("/watch")) type = "movie_player";
   else if (window.location.pathname.startsWith("/shorts")) type = "shorts-player";
   if (!type) return;
+
   const quality = await getStorage("quality", qualityConfig.default);
   const rate = await getStorage("rate", rateConfig.default);
   const seek = await getStorage("seek", seekConfig.default);
   const step = await getStorage("step", stepConfig.default);
-  window.dispatchEvent(new CustomEvent<youboost.extendedData>("initData", { detail: { quality, rate, seek, step, type } }));
-});
+
+  window.dispatchEvent(new CustomEvent<youboost.extendedData>("initData", { detail: { quality, rate, rateConfig, seek, step, type } }));
+}
+
+if (document.readyState === "complete" || document.readyState === "interactive") dispatchInitData();
+window.addEventListener("yt-navigate-finish", dispatchInitData);
 
 window.addEventListener("dataChangedKey", (({ detail }: CustomEvent<youboost.partialData>) => {
   chrome.runtime.sendMessage<youboost.partialData>(detail);
