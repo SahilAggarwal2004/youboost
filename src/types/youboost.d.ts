@@ -3,6 +3,7 @@ import { youtube } from "./youtube";
 
 export namespace youboost {
   export type data = {
+    enabled: boolean;
     quality: youtube.VideoQuality;
     rate: number;
     seek: number;

@@ -7,7 +7,7 @@ import { youtube } from "./types/youtube";
 let timeout: NodeJS.Timeout;
 let onDataChange: EventListener = () => {};
 
-window.addEventListener("initData", (({ detail: { quality, rate, rateConfig, seek, step, type } }: CustomEvent<youboost.extendedData>) => {
+window.addEventListener("initData", (({ detail: { enabled, quality, rate, rateConfig, seek, step, type } }: CustomEvent<youboost.extendedData>) => {
   const player = document.getElementById(type) as Player;
   if (!player) return;
 
@@ -31,7 +31,19 @@ window.addEventListener("initData", (({ detail: { quality, rate, rateConfig, see
     }, 1000);
   }
 
+  function restoreDefaults() {
+    video.playbackRate = rateConfig.default;
+    player.setPlaybackQualityRange(qualityConfig.default, qualityConfig.default);
+  }
+
+  function applySettings(initial = false) {
+    if (!initial || video.playbackRate === rateConfig.default) video.playbackRate = rate;
+    player.setPlaybackQualityRange(quality, quality);
+  }
+
   function changeRate(difference: number) {
+    if (!enabled) return;
+
     rate += difference;
     rate = Math.min(Math.max(round(rate), rateConfig.min), rateConfig.max);
     window.dispatchEvent(new CustomEvent<youboost.partialData>("dataChangedKey", { detail: { rate } }));
@@ -42,6 +54,8 @@ window.addEventListener("initData", (({ detail: { quality, rate, rateConfig, see
   function changeQuality(quality: youtube.VideoQuality): void;
   function changeQuality(step: number): void;
   function changeQuality(quality: youtube.VideoQuality | number) {
+    if (!enabled) return;
+
     const { default: defaultQuality, labels, total, values } = qualityConfig;
     if (typeof quality === "string") {
       qualityIndex = values.indexOf(quality);
@@ -57,6 +71,9 @@ window.addEventListener("initData", (({ detail: { quality, rate, rateConfig, see
 
   function handleKeyPress(event: KeyboardEvent) {
     keys[event.key as Key] = event.type === "keydown";
+
+    if (!enabled) return;
+
     if (keys["Control"]) {
       if (keys["."]) changeQuality(-1);
       else if (keys[","]) changeQuality(1);
@@ -72,6 +89,18 @@ window.addEventListener("initData", (({ detail: { quality, rate, rateConfig, see
   }
 
   onDataChange = (({ detail }: CustomEvent<youboost.partialData>) => {
+    if (detail.enabled !== undefined) {
+      enabled = detail.enabled;
+      if (enabled) {
+        displayText("YouBoost Enabled");
+        return applySettings();
+      }
+      displayText("YouBoost Disabled");
+      return restoreDefaults();
+    }
+
+    if (!enabled) return;
+
     if (detail.quality) {
       quality = detail.quality;
       qualityIndex = qualityConfig.values.indexOf(quality);
@@ -88,8 +117,9 @@ window.addEventListener("initData", (({ detail: { quality, rate, rateConfig, see
   window.addEventListener("dataChangedUI", onDataChange);
   player.onkeydown = handleKeyPress;
   player.onkeyup = handleKeyPress;
-  video.playbackRate = rate;
-  player.setPlaybackQualityRange(quality, quality);
+
+  if (enabled) applySettings(true);
+
   video.focus();
 }) as EventListener);
 

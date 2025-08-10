@@ -16,6 +16,8 @@ const qualityLabels: QualityLabels = {
   tiny: "144p",
 };
 
+export const enableConfig = { default: true };
+
 export const qualityConfig = createQualityConfig(qualityLabels);
 
 export const rateConfig = { default: 1, max: 4, min: 0.25 };

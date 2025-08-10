@@ -14,7 +14,8 @@ export async function resetStorage() {
   chrome.storage.local.clear();
 }
 
-export async function setData({ quality, rate, seek, step }: youboost.partialData) {
+export async function setData({ enabled, quality, rate, seek, step }: youboost.partialData) {
+  if (enabled !== undefined) setStorage("enabled", enabled);
   if (quality) setStorage("quality", quality);
   if (rate) setStorage("rate", rate);
   if (seek) setStorage("seek", seek);
