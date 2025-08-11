@@ -44,8 +44,8 @@ export default defineManifest({
   commands: {
     "toggle-extension": {
       suggested_key: {
-        default: "Ctrl+Shift+Y",
-        mac: "Command+Shift+Y",
+        default: "Ctrl+Y",
+        mac: "Command+Y",
       },
       description: "Toggle YouBoost extension on/off",
     },

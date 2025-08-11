@@ -10,6 +10,8 @@ export namespace youboost {
     step: number;
   };
 
+  export type dataKey = keyof data;
+
   export type extendedData = data & {
     rateConfig: typeof rateConfig;
     type: youtube.PlayerType;

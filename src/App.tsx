@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { getStorage, setData } from "./modules/storage";
+import { getStorage, registerChangeListener, revokeChangeListeners, setData } from "./modules/storage";
 import { enableConfig, qualityConfig, rateConfig, seekConfig, stepConfig } from "./constants";
 import Select from "./components/Select";
 import { arrToOptions, rateToLabel, round, timeToLabel } from "./modules/functions";
@@ -47,8 +47,14 @@ export default function App() {
     getStorage("rate", rateConfig.default).then(setRate);
     getStorage("seek", seekConfig.default).then(setSeek);
     getStorage("step", stepConfig.default).then(setStep);
+
+    registerChangeListener("enabled", (enabled) => setEnabled(enabled));
     chrome.runtime.onMessage.addListener(setState);
-    return () => chrome.runtime.onMessage.removeListener(setState);
+
+    return () => {
+      revokeChangeListeners();
+      chrome.runtime.onMessage.removeListener(setState);
+    };
   }, []);
 
   return (
@@ -88,6 +94,9 @@ export default function App() {
       <Header text="Controls" />
       <div className={`text-xs text-center space-y-1 ${!enabled ? "opacity-50" : ""}`}>
         <div>
+          Press <span className="font-semibold">{"Ctrl + Y"}</span> to toggle extension on/off.
+        </div>
+        <div>
           Press <span className="font-semibold">{"Alt + (0-9)"}</span> to select video quality.
         </div>
         <div>
@@ -101,9 +110,6 @@ export default function App() {
         </div>
         <div>
           Press <span className="font-semibold">←/→</span> to seek in YouTube Shorts.
-        </div>
-        <div>
-          Press <span className="font-semibold">{"Ctrl + Shift + Y"}</span> to toggle extension on/off.
         </div>
       </div>
 
