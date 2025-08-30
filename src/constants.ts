@@ -24,4 +24,6 @@ export const rateConfig = { default: 1, max: 4, min: 0.25 };
 
 export const seekConfig = createSeekConfig([5, 4.5, 4, 3.5, 3, 2.5, 2, 1.5, 1, 0.5], 2);
 
+export const source = "youboost";
+
 export const stepConfig = createStepConfig([0.5, 0.25, 0.1], 0.25);

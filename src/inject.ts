@@ -2,9 +2,11 @@
 // script.src = chrome.runtime.getURL("src/script.js");
 // (document.head || document.documentElement).appendChild(script);
 
-import { enableConfig, qualityConfig, rateConfig, seekConfig, stepConfig } from "./constants";
+import { enableConfig, qualityConfig, rateConfig, seekConfig, source, stepConfig } from "./constants";
+import { postMessage } from "./modules/functions";
 import { getStorage, setData } from "./modules/storage";
 import scriptSrc from "./script?script&module";
+import { MessageEventListener } from "./types/global";
 import { youboost } from "./types/youboost";
 import { youtube } from "./types/youtube";
 
@@ -19,11 +21,10 @@ async function dispatchInitData() {
   let type: youtube.PlayerType | undefined;
   if (window.location.pathname.startsWith("/watch")) type = "movie_player";
   else if (window.location.pathname.startsWith("/shorts")) type = "shorts-player";
-  if (!type) return;
-
-  window.dispatchEvent(
-    new CustomEvent<youboost.extendedData>("initData", {
-      detail: {
+  if (type)
+    postMessage({
+      type: "initData",
+      payload: {
         enabled: await getStorage("enabled", enableConfig.default),
         quality: await getStorage("quality", qualityConfig.default),
         rate: await getStorage("rate", rateConfig.default),
@@ -32,18 +33,23 @@ async function dispatchInitData() {
         step: await getStorage("step", stepConfig.default),
         type,
       },
-    })
-  );
+    });
 }
 
 if (document.readyState === "complete" || document.readyState === "interactive") dispatchInitData();
 window.addEventListener("yt-navigate-finish", dispatchInitData);
 
-window.addEventListener("dataChangedKey", (({ detail }: CustomEvent<youboost.partialData>) => {
-  chrome.runtime.sendMessage<youboost.partialData>(detail);
-  setData(detail);
-}) as EventListener);
+window.addEventListener("message", ((message) => {
+  if (message.source !== window) return;
 
-chrome.runtime.onMessage.addListener((detail: youboost.partialData) => {
-  window.dispatchEvent(new CustomEvent<youboost.partialData>("dataChangedUI", { detail }));
-});
+  const { data } = message;
+  if (data.source !== source) return;
+
+  const { type, payload } = data;
+  if (type !== "dataChangedKey") return;
+
+  chrome.runtime.sendMessage<youboost.partialData>(payload);
+  setData(payload);
+}) as MessageEventListener);
+
+chrome.runtime.onMessage.addListener((detail: youboost.partialData) => postMessage({ type: "dataChangedUI", payload: detail }));

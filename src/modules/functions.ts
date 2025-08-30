@@ -1,4 +1,5 @@
-import { QualityLabels } from "../types/global";
+import { source } from "../constants";
+import { MessageData, QualityLabels } from "../types/global";
 import { youtube } from "../types/youtube";
 
 export const arrToOptions = (arr: number[], generateLabel: (item: number) => string) => arr.map((item) => ({ value: item, label: generateLabel(item) }));
@@ -17,6 +18,10 @@ export function createQualityConfig(labels: QualityLabels) {
 export const createSeekConfig = (values: number[], defaultValue: number) => ({ default: defaultValue, options: arrToOptions(values, timeToLabel), values });
 
 export const createStepConfig = (values: number[], defaultValue: number) => ({ default: defaultValue, options: arrToOptions(values, rateToLabel), values });
+
+export function postMessage(data: MessageData) {
+  window.postMessage({ source, ...data }, window.location.origin);
+}
 
 export const rateToLabel = (rate: number) => `${rate}x`;
 

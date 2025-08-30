@@ -1,126 +1,145 @@
-import { qualityConfig } from "./constants";
-import { rateToLabel, round } from "./modules/functions";
-import { Key, Player } from "./types/global";
+import { qualityConfig, source } from "./constants";
+import { postMessage, rateToLabel, round } from "./modules/functions";
+import { DataChangeHandler, Key, MessageEventListener, Player } from "./types/global";
 import { youboost } from "./types/youboost";
 import { youtube } from "./types/youtube";
 
 let timeout: NodeJS.Timeout;
-let onDataChange: EventListener = () => {};
+let onDataChange: DataChangeHandler;
 
-window.addEventListener("initData", (({ detail: { enabled, quality, rate, rateConfig, seek, step, type } }: CustomEvent<youboost.extendedData>) => {
-  const player = document.getElementById(type) as Player;
-  if (!player) return;
+window.addEventListener("message", ((message) => {
+  if (message.source !== window) return;
 
-  const availableQualities = player.getAvailableQualityLevels();
-  const video = player.querySelector("video")!;
-  const textElement: HTMLDivElement = player.querySelector(".ytp-bezel-text")!;
-  const textWrapper = textElement.parentElement!.parentElement!;
-  const icon = document.querySelector(".ytp-bezel")! as HTMLDivElement;
-  const keys: { [key in Key]?: boolean } = {};
-  let qualityIndex = qualityConfig.values.indexOf(quality);
+  const { data } = message;
+  if (data.source !== source) return;
 
-  function displayText(text: string) {
-    textElement.innerText = text;
-    textWrapper.classList.remove("ytp-bezel-text-hide");
-    textWrapper.style.display = "block";
-    icon.style.display = "none";
-    clearTimeout(timeout);
-    timeout = setTimeout(() => {
-      textWrapper.style.display = "none";
-      icon.style.display = "block";
-    }, 1000);
-  }
+  const { type, payload } = data;
+  if (type === "dataChangedUI") onDataChange?.(payload);
+  else if (type === "initData") {
+    let { enabled, quality, rate, rateConfig, seek, step, type } = payload;
+    const player = document.getElementById(type) as Player;
+    if (!player) return;
 
-  function restoreDefaults() {
-    video.playbackRate = rateConfig.default;
-    player.setPlaybackQualityRange(qualityConfig.default, qualityConfig.default);
-  }
+    const availableQualities = player.getAvailableQualityLevels();
+    const video = player.querySelector("video")!;
+    const textElement: HTMLDivElement = player.querySelector(".ytp-bezel-text")!;
+    const textWrapper = textElement.parentElement!.parentElement!;
+    const icon = document.querySelector(".ytp-bezel")! as HTMLDivElement;
+    const keys: { [key in Key]?: boolean } = {};
+    let qualityIndex = qualityConfig.values.indexOf(quality);
 
-  function applySettings(initial = false) {
-    if (!initial || video.playbackRate === rateConfig.default) video.playbackRate = rate;
-    player.setPlaybackQualityRange(quality, quality);
-  }
-
-  function changeRate(difference: number) {
-    if (!enabled) return;
-
-    rate += difference;
-    rate = Math.min(Math.max(round(rate), rateConfig.min), rateConfig.max);
-    window.dispatchEvent(new CustomEvent<youboost.partialData>("dataChangedKey", { detail: { rate } }));
-    displayText(rateToLabel(rate));
-    video.playbackRate = rate;
-  }
-
-  function changeQuality(quality: youtube.VideoQuality): void;
-  function changeQuality(step: number): void;
-  function changeQuality(quality: youtube.VideoQuality | number) {
-    if (!enabled) return;
-
-    const { default: defaultQuality, labels, total, values } = qualityConfig;
-    if (typeof quality === "string") {
-      qualityIndex = values.indexOf(quality);
-    } else if (typeof quality === "number") {
-      qualityIndex = (qualityIndex + quality + total) % total;
-      quality = values[qualityIndex];
-    }
-    window.dispatchEvent(new CustomEvent<youboost.partialData>("dataChangedKey", { detail: { quality } }));
-    displayText(labels[quality]);
-    if (!availableQualities.includes(quality)) quality = defaultQuality;
-    player!.setPlaybackQualityRange(quality, quality);
-  }
-
-  function handleKeyPress(event: KeyboardEvent) {
-    keys[event.key as Key] = event.type === "keydown";
-
-    if (!enabled) return;
-
-    if (keys["Control"]) {
-      if (keys["."]) changeQuality(-1);
-      else if (keys[","]) changeQuality(1);
-      else if (keys["<"]) changeRate(-step);
-      else if (keys[">"]) changeRate(step);
-    } else if (keys["Alt"]) {
-      const key = +event.key;
-      if (key) changeQuality(qualityConfig.values[key]);
-    } else if (type === "shorts-player") {
-      if (keys["ArrowLeft"]) player!.seekBy(-seek);
-      else if (keys["ArrowRight"]) player!.seekBy(seek);
-    }
-  }
-
-  onDataChange = (({ detail }: CustomEvent<youboost.partialData>) => {
-    if (detail.enabled !== undefined) {
-      enabled = detail.enabled;
-      if (enabled) {
-        displayText("YouBoost Enabled");
-        return applySettings();
-      }
-      displayText("YouBoost Disabled");
-      return restoreDefaults();
-    }
-
-    if (!enabled) return;
-
-    if (detail.quality) {
-      quality = detail.quality;
-      qualityIndex = qualityConfig.values.indexOf(quality);
+    function applySettings(initial = false) {
+      if (!initial || video.playbackRate === rateConfig.default) video.playbackRate = rate;
       player!.setPlaybackQualityRange(quality, quality);
     }
-    if (detail.rate) {
-      rate = detail.rate;
+
+    function changeQuality(quality: youtube.VideoQuality): void;
+    function changeQuality(step: number): void;
+    function changeQuality(quality: youtube.VideoQuality | number) {
+      if (!enabled) return;
+
+      const { default: defaultQuality, labels, total, values } = qualityConfig;
+      if (typeof quality === "string") {
+        qualityIndex = values.indexOf(quality);
+      } else if (typeof quality === "number") {
+        qualityIndex = (qualityIndex + quality + total) % total;
+        quality = values[qualityIndex];
+      }
+      postMessage({ type: "dataChangedKey", payload: { quality } });
+      displayText(labels[quality]);
+      if (!availableQualities.includes(quality)) quality = defaultQuality;
+      player!.setPlaybackQualityRange(quality, quality);
+    }
+
+    function changeRate(difference: number) {
+      if (!enabled) return;
+
+      rate += difference;
+      rate = Math.min(Math.max(round(rate), rateConfig.min), rateConfig.max);
+      postMessage({ type: "dataChangedKey", payload: { rate } });
+      displayText(rateToLabel(rate));
       video.playbackRate = rate;
     }
-    if (detail.seek) seek = detail.seek;
-    if (detail.step) step = detail.step;
-  }) as EventListener;
 
-  window.addEventListener("dataChangedUI", onDataChange);
-  player.onkeydown = handleKeyPress;
-  player.onkeyup = handleKeyPress;
+    function displayText(text: string) {
+      textElement.innerText = text;
+      textWrapper.classList.remove("ytp-bezel-text-hide");
+      textWrapper.style.display = "block";
+      icon.style.display = "none";
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        textWrapper.style.display = "none";
+        icon.style.display = "block";
+      }, 1000);
+    }
 
-  if (enabled) applySettings(true);
+    function handleKeyPress(event: KeyboardEvent) {
+      keys[event.key as Key] = event.type === "keydown";
 
-  video.focus();
-}) as EventListener);
+      if (!enabled) return;
 
-window.addEventListener("yt-navigate-start", () => window.removeEventListener("dataChangedUI", onDataChange));
+      if (keys["Control"]) {
+        if (keys["."]) changeQuality(-1);
+        else if (keys[","]) changeQuality(1);
+        else if (keys["<"]) changeRate(-step);
+        else if (keys[">"]) changeRate(step);
+      } else if (keys["Alt"]) {
+        const key = +event.key;
+        if (key) changeQuality(qualityConfig.values[key]);
+      } else if (type === "shorts-player") {
+        if (keys["ArrowLeft"]) player!.seekBy(-seek);
+        else if (keys["ArrowRight"]) player!.seekBy(seek);
+      }
+    }
+
+    const isShowingAd = () => player!.classList.contains("ad-showing");
+
+    function observeAdFinish() {
+      let wasShowingAd = isShowingAd();
+
+      new MutationObserver(() => {
+        if (wasShowingAd && !isShowingAd()) applySettings();
+        wasShowingAd = isShowingAd();
+      }).observe(player!, { attributes: true, attributeFilter: ["class"] });
+    }
+
+    onDataChange = (data: youboost.partialData) => {
+      if (data.enabled !== undefined) {
+        enabled = data.enabled;
+        if (enabled) {
+          displayText("YouBoost Enabled");
+          return applySettings();
+        }
+        displayText("YouBoost Disabled");
+        return restoreDefaults();
+      }
+
+      if (!enabled) return;
+
+      if (data.quality) {
+        quality = data.quality;
+        qualityIndex = qualityConfig.values.indexOf(quality);
+        player!.setPlaybackQualityRange(quality, quality);
+      }
+      if (data.rate) {
+        rate = data.rate;
+        video.playbackRate = rate;
+      }
+      if (data.seek) seek = data.seek;
+      if (data.step) step = data.step;
+    };
+
+    function restoreDefaults() {
+      video.playbackRate = rateConfig.default;
+      player!.setPlaybackQualityRange(qualityConfig.default, qualityConfig.default);
+    }
+
+    observeAdFinish();
+    player.onkeydown = handleKeyPress;
+    player.onkeyup = handleKeyPress;
+
+    if (enabled && !isShowingAd()) applySettings(true);
+
+    video.focus();
+  }
+}) as MessageEventListener);
