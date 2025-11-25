@@ -8,12 +8,16 @@ Take your YouTube experience to the next level with YouBoost! This powerful exte
 - **Playback Speed Customization:** Set your desired playback speed and switch between them effortlessly.
 - **Step Interval Adjustment:** Control the step size for changing playback speed.
 - **Seek Interval Customization:** Tailor the seek interval to move forward or backward by your chosen duration.
-- **Keyboard Shortcuts:** Quickly adjust settings using convenient keyboard shortcuts:
-  - Press **Ctrl + Y** to toggle extension on/off.
-  - Press **Alt + (0-9)** to select video quality.
-  - Press **Ctrl + ,/.** to adjust video quality.
-  - Press **Ctrl + </>** to change playback speed.
-  - Press **</>** to change playback speed temporarily.
-  - Press **←/→** to seek in YouTube Shorts.
+
+### Keyboard Shortcuts:
+
+Quickly adjust settings using convenient keyboard shortcuts:
+
+- Press **Ctrl + Y** to toggle extension on/off.
+- Press **Alt + (0-9)** to select video quality.
+- Press **Ctrl + ,/.** to adjust video quality.
+- Press **Ctrl + </>** to change playback speed.
+- Press **</>** to change playback speed temporarily.
+- Press **←/→** to seek in YouTube Shorts.
 
 Want to see the source code or contribute? Check out our [GitHub repository](https://github.com/SahilAggarwal2004/youboost).

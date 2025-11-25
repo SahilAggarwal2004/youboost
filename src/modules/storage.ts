@@ -12,7 +12,7 @@ chrome.storage.local.onChanged.addListener(storageChangeListener);
 
 export async function getStorage<K extends youboost.dataKey>(key: K, fallbackValue?: youboost.data[K]) {
   return new Promise<youboost.data[K]>((resolve) => {
-    chrome.storage.local.get(key, (result) => resolve(result[key] ?? fallbackValue));
+    chrome.storage.local.get(key, (result) => resolve((result[key] ?? fallbackValue) as youboost.data[K]));
   });
 }
 

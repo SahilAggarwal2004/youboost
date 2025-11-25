@@ -16,8 +16,8 @@ window.addEventListener("message", ((message) => {
   const { type, payload } = data;
   if (type === "dataChangedUI") onDataChange?.(payload);
   else if (type === "initData") {
-    let { enabled, quality, rate, rateConfig, seek, step, type } = payload;
-    const player = document.getElementById(type) as Player;
+    let { enabled, playerType, quality, rate, rateConfig, seek, step } = payload;
+    const player = document.getElementById(playerType) as Player;
     if (!player) return;
 
     const availableQualities = player.getAvailableQualityLevels();
@@ -86,7 +86,7 @@ window.addEventListener("message", ((message) => {
       } else if (keys["Alt"]) {
         const key = +event.key;
         if (key) changeQuality(qualityConfig.values[key]);
-      } else if (type === "shorts-player") {
+      } else if (playerType === "shorts-player") {
         if (keys["ArrowLeft"]) player!.seekBy(-seek);
         else if (keys["ArrowRight"]) player!.seekBy(seek);
       }

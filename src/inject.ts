@@ -18,20 +18,20 @@ document.head.prepend(script);
 console.log("YouBoost activated");
 
 async function dispatchInitData() {
-  let type: youtube.PlayerType | undefined;
-  if (window.location.pathname.startsWith("/watch")) type = "movie_player";
-  else if (window.location.pathname.startsWith("/shorts")) type = "shorts-player";
-  if (type)
+  let playerType: youtube.PlayerType | undefined;
+  if (window.location.pathname.startsWith("/watch")) playerType = "movie_player";
+  else if (window.location.pathname.startsWith("/shorts")) playerType = "shorts-player";
+  if (playerType)
     postMessage({
       type: "initData",
       payload: {
         enabled: await getStorage("enabled", enableConfig.default),
+        playerType,
         quality: await getStorage("quality", qualityConfig.default),
         rate: await getStorage("rate", rateConfig.default),
         rateConfig,
         seek: await getStorage("seek", seekConfig.default),
         step: await getStorage("step", stepConfig.default),
-        type,
       },
     });
 }

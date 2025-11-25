@@ -13,8 +13,8 @@ export namespace youboost {
   export type dataKey = keyof data;
 
   export type extendedData = data & {
+    playerType: youtube.PlayerType;
     rateConfig: typeof rateConfig;
-    type: youtube.PlayerType;
   };
 
   export type partialData = Partial<data>;

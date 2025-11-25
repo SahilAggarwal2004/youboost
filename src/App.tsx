@@ -60,7 +60,7 @@ export default function App() {
   return (
     <div className="p-3 pb-3 space-y-4 text-white text-sm">
       <div className="grid grid-cols-4 items-center px-2">
-        <img src="logo.png" alt="YouBoost logo" className="self" />
+        <img src="logo.webp" alt="YouBoost logo" className="self" />
         <div className="col-span-3 text-center">
           <h2 className="text-xl">YouBoost</h2>
           <h4 className="text-xs">Boost Your YouTube Experience</h4>
