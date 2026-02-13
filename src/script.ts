@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 import { qualityConfig, source } from "./constants";
 import { postMessage, rateToLabel, round } from "./modules/functions";
 import { DataChangeHandler, Key, MessageEventListener, Player } from "./types/global";

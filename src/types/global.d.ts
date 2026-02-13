@@ -17,6 +17,9 @@ export type SelectProps<T> = {
 // modules/functions.ts
 export type QualityLabels = { [key in youtube.VideoQuality]: string };
 
+// modules/storage.ts
+export type Listener<T = unknown> = (value: T) => unknown;
+
 // inject.ts
 export type MessageData =
   | { type: "dataChangedKey"; payload: youboost.partialData }

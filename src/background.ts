@@ -11,7 +11,7 @@ chrome.runtime.onInstalled.addListener(async () => {
 
 chrome.commands.onCommand.addListener(async (command) => {
   switch (command) {
-    case "toggle-extension":
+    case "toggle-extension": {
       const enabled = await getStorage("enabled", true);
       await setData({ enabled: !enabled });
       const tabs = await chrome.tabs.query({ url: matchPatterns });
@@ -20,5 +20,6 @@ chrome.commands.onCommand.addListener(async (command) => {
         chrome.tabs.sendMessage(id, { enabled: !enabled });
       }
       break;
+    }
   }
 });

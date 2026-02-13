@@ -4,3 +4,4 @@ onlyBuiltDependencies:
 
 overrides:
   js-yaml@>=4.0.0 <4.1.1: '>=4.1.1'
+  undici@<6.23.0: '>=6.23.0'

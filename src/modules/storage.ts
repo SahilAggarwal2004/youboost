@@ -1,6 +1,7 @@
+import { Listener } from "../types/global";
 import { youboost } from "../types/youboost";
 
-let storageChangeListeners: Record<string, (value: any) => any> = {};
+let storageChangeListeners: Record<string, Listener> = {};
 
 const storageChangeListener = (changes: { [key: string]: chrome.storage.StorageChange }) => {
   for (const key in changes) {
@@ -16,8 +17,8 @@ export async function getStorage<K extends youboost.dataKey>(key: K, fallbackVal
   });
 }
 
-export function registerChangeListener<K extends youboost.dataKey>(key: K, listener: (changedValue: youboost.data[K]) => any) {
-  storageChangeListeners[key] = listener;
+export function registerChangeListener<K extends youboost.dataKey>(key: K, listener: Listener<youboost.data[K]>) {
+  storageChangeListeners[key] = listener as Listener;
 }
 
 export const resetStorage = () => chrome.storage.local.clear();
