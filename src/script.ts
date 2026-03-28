@@ -1,6 +1,6 @@
 /* eslint-disable prefer-const */
 import { qualityConfig, source } from "./constants";
-import { postMessage, rateToLabel, round } from "./modules/functions";
+import { postMessage, rateToLabel, round } from "./lib/functions";
 import { DataChangeHandler, Key, MessageEventListener, Player } from "./types/global";
 import { youboost } from "./types/youboost";
 import { youtube } from "./types/youtube";
@@ -34,21 +34,21 @@ window.addEventListener("message", ((message) => {
       player!.setPlaybackQualityRange(quality, quality);
     }
 
-    function changeQuality(quality: youtube.VideoQuality): void;
+    function changeQuality(quality: youtube.VideoQuality | undefined): void;
     function changeQuality(step: number): void;
-    function changeQuality(quality: youtube.VideoQuality | number) {
-      if (!enabled) return;
+    function changeQuality(quality: youtube.VideoQuality | number | undefined) {
+      if (!enabled || quality == null) return;
 
       const { default: defaultQuality, labels, total, values } = qualityConfig;
       if (typeof quality === "string") {
         qualityIndex = values.indexOf(quality);
       } else if (typeof quality === "number") {
         qualityIndex = (qualityIndex + quality + total) % total;
-        quality = values[qualityIndex];
+        quality = values[qualityIndex]!;
       }
       postMessage({ type: "dataChangedKey", payload: { quality } });
-      displayText(labels[quality]);
-      if (!availableQualities.includes(quality)) quality = defaultQuality;
+      displayText(labels[quality]!);
+      if (!availableQualities.includes(quality)) quality = defaultQuality!;
       player!.setPlaybackQualityRange(quality, quality);
     }
 

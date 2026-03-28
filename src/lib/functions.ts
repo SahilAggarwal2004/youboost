@@ -7,7 +7,7 @@ export const arrToOptions = (arr: number[], generateLabel: (item: number) => str
 export function createQualityConfig(labels: QualityLabels) {
   const values = Object.keys(labels) as youtube.VideoQuality[];
   return {
-    default: values[0],
+    default: values[0]!,
     labels,
     options: Object.entries(labels).map(([value, label]) => ({ value: value as youtube.VideoQuality, label })),
     total: values.length,

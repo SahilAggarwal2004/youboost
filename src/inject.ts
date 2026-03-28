@@ -3,8 +3,8 @@
 // (document.head || document.documentElement).appendChild(script);
 
 import { enableConfig, qualityConfig, rateConfig, seekConfig, source, stepConfig } from "./constants";
-import { postMessage } from "./modules/functions";
-import { getStorage, setData } from "./modules/storage";
+import { postMessage } from "./lib/functions";
+import { getStorage, setData } from "./lib/storage";
 import scriptSrc from "./script?script&module";
 import { MessageEventListener } from "./types/global";
 import { youboost } from "./types/youboost";

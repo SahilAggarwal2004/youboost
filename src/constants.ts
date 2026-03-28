@@ -1,4 +1,4 @@
-import { createQualityConfig, createSeekConfig, createStepConfig } from "./modules/functions";
+import { createQualityConfig, createSeekConfig, createStepConfig } from "./lib/functions";
 import { QualityLabels } from "./types/global";
 
 export const matchPatterns = ["*://www.youtube.com/*"];

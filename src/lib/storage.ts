@@ -4,17 +4,13 @@ import { youboost } from "../types/youboost";
 let storageChangeListeners: Record<string, Listener> = {};
 
 const storageChangeListener = (changes: { [key: string]: chrome.storage.StorageChange }) => {
-  for (const key in changes) {
-    storageChangeListeners[key as youboost.dataKey]?.(changes[key].newValue);
-  }
+  for (const key in changes) storageChangeListeners[key as youboost.dataKey]?.(changes[key]!.newValue);
 };
 
 chrome.storage.local.onChanged.addListener(storageChangeListener);
 
 export async function getStorage<K extends youboost.dataKey>(key: K, fallbackValue?: youboost.data[K]) {
-  return new Promise<youboost.data[K]>((resolve) => {
-    chrome.storage.local.get(key, (result) => resolve((result[key] ?? fallbackValue) as youboost.data[K]));
-  });
+  return new Promise<youboost.data[K]>((resolve) => chrome.storage.local.get(key, (result) => resolve((result[key] ?? fallbackValue) as youboost.data[K])));
 }
 
 export function registerChangeListener<K extends youboost.dataKey>(key: K, listener: Listener<youboost.data[K]>) {

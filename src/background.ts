@@ -1,5 +1,5 @@
 import { matchPatterns } from "./constants";
-import { getStorage, setData } from "./modules/storage";
+import { getStorage, setData } from "./lib/storage";
 
 chrome.runtime.onInstalled.addListener(async () => {
   const tabs = await chrome.tabs.query({ url: matchPatterns });

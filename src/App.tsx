@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { getStorage, registerChangeListener, revokeChangeListeners, setData } from "./modules/storage";
-import { enableConfig, qualityConfig, rateConfig, seekConfig, stepConfig } from "./constants";
-import Select from "./components/Select";
-import { arrToOptions, rateToLabel, round, timeToLabel } from "./modules/functions";
 import Header from "./components/Header";
+import Select from "./components/Select";
+import { enableConfig, qualityConfig, rateConfig, seekConfig, stepConfig } from "./constants";
+import { arrToOptions, rateToLabel, round, timeToLabel } from "./lib/functions";
+import { getStorage, registerChangeListener, revokeChangeListeners, setData } from "./lib/storage";
 import { youboost } from "./types/youboost";
 
 export default function App() {
@@ -35,7 +35,7 @@ export default function App() {
   function updateData(data: youboost.partialData) {
     setData(data);
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      const { id } = tabs[0];
+      const { id } = tabs[0] ?? {};
       if (id) chrome.tabs.sendMessage<youboost.partialData>(id, data);
     });
     setState(data);
@@ -48,7 +48,7 @@ export default function App() {
     getStorage("seek", seekConfig.default).then(setSeek);
     getStorage("step", stepConfig.default).then(setStep);
 
-    registerChangeListener("enabled", (enabled) => setEnabled(enabled));
+    registerChangeListener("enabled", (enabled: boolean) => setEnabled(enabled));
     chrome.runtime.onMessage.addListener(setState);
 
     return () => {
@@ -83,7 +83,7 @@ export default function App() {
           text="Video Quality"
           options={qualityConfig.options}
           value={quality}
-          label={qualityConfig.labels[quality]}
+          label={qualityConfig.labels[quality]!}
           onChange={(quality) => updateData({ quality: quality!.value })}
         />
         <Select text="Playback Speed" options={rateOptions} value={rate} label={rateToLabel(rate)} onChange={(rate) => updateData({ rate: rate!.value })} />
