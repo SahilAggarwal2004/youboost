@@ -24,12 +24,13 @@ export function revokeChangeListeners() {
   chrome.storage.local.onChanged.removeListener(storageChangeListener);
 }
 
-export async function setData({ enabled, quality, rate, seek, step }: youboost.partialData) {
+export async function setData({ enabled, playbackStep, quality, rate, seekStep, volumeStep }: youboost.partialData) {
   if (enabled !== undefined) setStorage("enabled", enabled);
+  if (playbackStep) setStorage("playbackStep", playbackStep);
   if (quality) setStorage("quality", quality);
   if (rate) setStorage("rate", rate);
-  if (seek) setStorage("seek", seek);
-  if (step) setStorage("step", step);
+  if (seekStep) setStorage("seekStep", seekStep);
+  if (volumeStep) setStorage("volumeStep", volumeStep);
 }
 
 export function setStorage<K extends youboost.dataKey>(key: K, value: youboost.data[K]) {

@@ -1,8 +1,8 @@
 import { source } from "../constants";
-import { MessageData, QualityLabels } from "../types/global";
+import { GenerateLabel, MessageData, QualityLabels } from "../types/global";
 import { youtube } from "../types/youtube";
 
-export const arrToOptions = (arr: number[], generateLabel: (item: number) => string) => arr.map((item) => ({ value: item, label: generateLabel(item) }));
+export const arrToOptions = (arr: number[], generateLabel: GenerateLabel) => arr.map((item) => ({ value: item, label: generateLabel(item) }));
 
 export function createQualityConfig(labels: QualityLabels) {
   const values = Object.keys(labels) as youtube.VideoQuality[];
@@ -15,9 +15,11 @@ export function createQualityConfig(labels: QualityLabels) {
   };
 }
 
-export const createSeekConfig = (values: number[], defaultValue: number) => ({ default: defaultValue, options: arrToOptions(values, timeToLabel), values });
-
-export const createStepConfig = (values: number[], defaultValue: number) => ({ default: defaultValue, options: arrToOptions(values, rateToLabel), values });
+export const createStepConfig = (values: number[], defaultValue: number, generateLabel: GenerateLabel) => ({
+  default: defaultValue,
+  options: arrToOptions(values, generateLabel),
+  values,
+});
 
 export function postMessage(data: MessageData) {
   window.postMessage({ source, ...data }, window.location.origin);
@@ -27,4 +29,6 @@ export const rateToLabel = (rate: number) => `${rate}x`;
 
 export const round = (number: number, digits = 2) => (digits ? +number.toFixed(digits) : Math.floor(number));
 
-export const timeToLabel = (rate: number) => `${rate}s`;
+export const timeToLabel = (time: number) => `${time}s`;
+
+export const volumeToLabel = (volume: number) => `${volume}%`;

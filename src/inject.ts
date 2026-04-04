@@ -2,7 +2,7 @@
 // script.src = chrome.runtime.getURL("src/script.js");
 // (document.head || document.documentElement).appendChild(script);
 
-import { enableConfig, qualityConfig, rateConfig, seekConfig, source, stepConfig } from "./constants";
+import { enableConfig, playbackStepConfig, qualityConfig, rateConfig, seekStepConfig, source, volumeStepConfig } from "./constants";
 import { postMessage } from "./lib/functions";
 import { getStorage, setData } from "./lib/storage";
 import scriptSrc from "./script?script&module";
@@ -26,12 +26,12 @@ async function dispatchInitData() {
       type: "initData",
       payload: {
         enabled: await getStorage("enabled", enableConfig.default),
+        playbackStep: await getStorage("playbackStep", playbackStepConfig.default),
         playerType,
         quality: await getStorage("quality", qualityConfig.default),
         rate: await getStorage("rate", rateConfig.default),
-        rateConfig,
-        seek: await getStorage("seek", seekConfig.default),
-        step: await getStorage("step", stepConfig.default),
+        seekStep: await getStorage("seekStep", seekStepConfig.default),
+        volumeStep: await getStorage("volumeStep", volumeStepConfig.default),
       },
     });
 }

@@ -1,8 +1,11 @@
 export namespace youtube {
   export interface Player {
     getAvailableQualityLevels(): VideoQuality[];
-    setPlaybackQualityRange(qualityLow: VideoQuality, qualityHigh: VideoQuality): void;
+    getVolume(): number;
     seekBy(seconds: number): void;
+    setPlaybackQualityRange(qualityLow: VideoQuality, qualityHigh: VideoQuality): void;
+    setPlaybackRate(rate: number): void;
+    setVolume(volume: number): void;
   }
 
   export type PlayerType = "movie_player" | "shorts-player";

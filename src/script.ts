@@ -1,11 +1,10 @@
 /* eslint-disable prefer-const */
-import { qualityConfig, source } from "./constants";
+import { modifierKeys, qualityConfig, rateConfig, source, volumeConfig } from "./constants";
 import { postMessage, rateToLabel, round } from "./lib/functions";
-import { DataChangeHandler, Key, MessageEventListener, Player } from "./types/global";
+import { DataChangeHandler, Key, MessageEventListener, ModifierKey, Player } from "./types/global";
 import { youboost } from "./types/youboost";
 import { youtube } from "./types/youtube";
 
-let timeout: NodeJS.Timeout;
 let onDataChange: DataChangeHandler;
 
 window.addEventListener("message", ((message) => {
@@ -17,20 +16,21 @@ window.addEventListener("message", ((message) => {
   const { type, payload } = data;
   if (type === "dataChangedUI") onDataChange?.(payload);
   else if (type === "initData") {
-    let { enabled, playerType, quality, rate, rateConfig, seek, step } = payload;
+    let { enabled, playbackStep, playerType, quality, rate, seekStep, volumeStep } = payload;
     const player = document.getElementById(playerType) as Player;
     if (!player) return;
 
     const availableQualities = player.getAvailableQualityLevels();
     const video = player.querySelector("video")!;
     const textElement: HTMLDivElement = player.querySelector(".ytp-bezel-text")!;
-    const textWrapper = textElement.parentElement!.parentElement!;
+    const textWrapper = textElement.parentElement!.parentElement! as HTMLDivElement;
+
     const icon = document.querySelector(".ytp-bezel")! as HTMLDivElement;
-    const keys: { [key in Key]?: boolean } = {};
+    const activeModifierKeys: Record<ModifierKey, boolean> = { control: false, alt: false };
     let qualityIndex = qualityConfig.values.indexOf(quality);
 
-    function applySettings(initial = false) {
-      if (!initial || video.playbackRate === rateConfig.default) video.playbackRate = rate;
+    function applySettings() {
+      video.playbackRate = rate;
       player!.setPlaybackQualityRange(quality, quality);
     }
 
@@ -55,41 +55,55 @@ window.addEventListener("message", ((message) => {
     function changeRate(difference: number) {
       if (!enabled) return;
 
-      rate += difference;
-      rate = Math.min(Math.max(round(rate), rateConfig.min), rateConfig.max);
+      const oldRate = video.playbackRate;
+      rate = Math.min(Math.max(round(rate + difference), rateConfig.min), rateConfig.max);
       postMessage({ type: "dataChangedKey", payload: { rate } });
       displayText(rateToLabel(rate));
-      video.playbackRate = rate;
+      if (rate !== oldRate) video.playbackRate = rate;
+    }
+
+    function changeVolume(difference: number) {
+      if (!enabled) return;
+
+      const oldVolume = player!.getVolume();
+      const volume = Math.min(Math.max(oldVolume + difference, volumeConfig.min), volumeConfig.max);
+      displayText(`${volume}%`);
+      if (volume !== oldVolume) player!.setVolume(volume);
     }
 
     function displayText(text: string) {
-      textElement.innerText = text;
-      textWrapper.classList.remove("ytp-bezel-text-hide");
-      textWrapper.style.display = "block";
-      icon.style.display = "none";
-      clearTimeout(timeout);
-      timeout = setTimeout(() => {
-        textWrapper.style.display = "none";
-        icon.style.display = "block";
-      }, 1000);
+      textWrapper.style.display = "none";
+      icon.style.display = "block";
+      setTimeout(() => {
+        textElement.innerText = text;
+        textWrapper.classList.remove("ytp-bezel-text-hide");
+        textWrapper.style.display = "block";
+        icon.style.display = "none";
+      }, 0);
     }
 
     function handleKeyPress(event: KeyboardEvent) {
-      keys[event.key as Key] = event.type === "keydown";
-
       if (!enabled) return;
 
-      if (keys["Control"]) {
-        if (keys["."]) changeQuality(-1);
-        else if (keys[","]) changeQuality(1);
-        else if (keys["<"]) changeRate(-step);
-        else if (keys[">"]) changeRate(step);
-      } else if (keys["Alt"]) {
-        const key = +event.key;
-        if (key) changeQuality(qualityConfig.values[key]);
-      } else if (playerType === "shorts-player") {
-        if (keys["ArrowLeft"]) player!.seekBy(-seek);
-        else if (keys["ArrowRight"]) player!.seekBy(seek);
+      const key = event.key.toLowerCase() as Key;
+      const isKeyDown = event.type === "keydown";
+      if (modifierKeys.includes(key as ModifierKey)) activeModifierKeys[key as ModifierKey] = isKeyDown;
+
+      if (!isKeyDown) return;
+
+      if (activeModifierKeys["control"]) {
+        if (key === ",") changeQuality(-1);
+        else if (key === ".") changeQuality(1);
+        else if (key === "<") changeRate(-playbackStep);
+        else if (key === ">") changeRate(playbackStep);
+      } else if (activeModifierKeys["alt"]) {
+        if (key >= "0" && key <= "9") changeQuality(qualityConfig.values[+key]);
+      } else {
+        const isShortsPlayer = playerType === "shorts-player";
+        if (key === "w") changeVolume(volumeStep);
+        else if (key === "s") changeVolume(-volumeStep);
+        else if (key === "a" || (isShortsPlayer && key === "arrowleft")) player!.seekBy(-seekStep);
+        else if (key === "d" || (isShortsPlayer && key === "arrowright")) player!.seekBy(seekStep);
       }
     }
 
@@ -117,6 +131,7 @@ window.addEventListener("message", ((message) => {
 
       if (!enabled) return;
 
+      if (data.playbackStep) playbackStep = data.playbackStep;
       if (data.quality) {
         quality = data.quality;
         qualityIndex = qualityConfig.values.indexOf(quality);
@@ -126,9 +141,13 @@ window.addEventListener("message", ((message) => {
         rate = data.rate;
         video.playbackRate = rate;
       }
-      if (data.seek) seek = data.seek;
-      if (data.step) step = data.step;
+      if (data.seekStep) seekStep = data.seekStep;
+      if (data.volumeStep) volumeStep = data.volumeStep;
     };
+
+    function resetKeys() {
+      for (const key in modifierKeys) activeModifierKeys[key as ModifierKey] = false;
+    }
 
     function restoreDefaults() {
       video.playbackRate = rateConfig.default;
@@ -136,10 +155,11 @@ window.addEventListener("message", ((message) => {
     }
 
     observeAdFinish();
+    player.onblur = resetKeys;
     player.onkeydown = handleKeyPress;
     player.onkeyup = handleKeyPress;
 
-    if (enabled && !isShowingAd()) applySettings(true);
+    if (enabled && !isShowingAd()) applySettings();
 
     video.focus();
   }

@@ -1,23 +1,23 @@
 **YouBoost: Boost Your YouTube Experience**
 
-Take your YouTube experience to the next level with YouBoost! This powerful extension gives you full control over your video playback, allowing you to customize settings like video quality, playback speed, and seek intervals. With YouBoost, you can fine-tune your viewing experience, making YouTube work the way you want it to.
+Take your YouTube experience to the next level with YouBoost. This extension gives you precise control over video playback, allowing you to customize quality, speed, seeking, and volume behavior. Fine-tune everything to match your preferences and workflow.
 
-### Features:
+### Features
 
-- **Video Quality Control:** Easily adjust the video quality to match your preference with just a few clicks.
-- **Playback Speed Customization:** Set your desired playback speed and switch between them effortlessly.
-- **Step Interval Adjustment:** Control the step size for changing playback speed.
-- **Seek Interval Customization:** Tailor the seek interval to move forward or backward by your chosen duration.
+- **Video Quality Control:** Quickly switch between available video qualities.
+- **Playback Speed Customization:** Set and adjust playback speed with configurable step sizes.
+- **Playback Step Control:** Define how much the speed changes per step.
+- **Seek Interval Customization:** Control how far you jump forward or backward.
+- **Volume Step Control:** Adjust volume in consistent, customizable increments.
 
-### Keyboard Shortcuts:
+### Keyboard Shortcuts
 
-Quickly adjust settings using convenient keyboard shortcuts:
-
-- Press **Ctrl + Y** to toggle extension on/off.
+- Press **Ctrl + Y** to toggle the extension on or off.
 - Press **Alt + (0-9)** to select video quality.
-- Press **Ctrl + ,/.** to adjust video quality.
-- Press **Ctrl + </>** to change playback speed.
-- Press **</>** to change playback speed temporarily.
-- Press **←/→** to seek in YouTube Shorts.
+- Press **Ctrl + ,/.** to decrease or increase video quality.
+- Press **Ctrl + </>** to decrease or increase playback speed.
+- Press **</>** to temporarily adjust playback speed.
+- Press **W/S** to increase or decrease volume.
+- Press **A/D** to seek backward or forward.
 
-Want to see the source code or contribute? Check out our [GitHub repository](https://github.com/SahilAggarwal2004/youboost).
+Want to see the source code or contribute? Check out the GitHub repository: [https://github.com/SahilAggarwal2004/youboost](https://github.com/SahilAggarwal2004/youboost)

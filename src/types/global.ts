@@ -1,4 +1,4 @@
-import { source } from "../constants";
+import { actionKeys, modifierKeys, source } from "../constants";
 import { youboost } from "./youboost";
 import { youtube } from "./youtube";
 
@@ -14,10 +14,12 @@ export type SelectProps<T> = {
   onChange: (value: { value: T; label: string } | null) => void;
 };
 
-// modules/functions.ts
+// lib/functions.ts
+export type GenerateLabel = (item: number) => string;
+
 export type QualityLabels = { [key in youtube.VideoQuality]: string };
 
-// modules/storage.ts
+// lib/storage.ts
 export type Listener<T = unknown> = (value: T) => unknown;
 
 // inject.ts
@@ -29,8 +31,12 @@ export type MessageData =
 export type MessageEventListener = (event: MessageEvent<MessageData & { source: typeof source }>) => void;
 
 // script.ts
+export type ActionKey = (typeof actionKeys)[number];
+
 export type DataChangeHandler = (data: youboost.partialData) => void;
 
-export type Key = "Control" | "<" | ">" | "," | "." | "Alt" | "ArrowLeft" | "ArrowRight" | number;
+export type Key = ActionKey | ModifierKey;
+
+export type ModifierKey = (typeof modifierKeys)[number];
 
 export type Player = (HTMLElement & youtube.Player) | null;
