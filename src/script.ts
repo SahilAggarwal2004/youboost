@@ -22,16 +22,16 @@ window.addEventListener("message", ((message) => {
 
     const availableQualities = player.getAvailableQualityLevels();
     const video = player.querySelector("video")!;
-    const textElement: HTMLDivElement = player.querySelector(".ytp-bezel-text")!;
-    const textWrapper = textElement.parentElement!.parentElement! as HTMLDivElement;
+    const textElement = player.querySelector(".ytp-bezel-text") as HTMLDivElement;
+    const textWrapper = textElement.parentElement!.parentElement as HTMLDivElement;
 
-    const icon = document.querySelector(".ytp-bezel")! as HTMLDivElement;
+    const icon = document.querySelector(".ytp-bezel") as HTMLDivElement;
     const activeModifierKeys: Record<ModifierKey, boolean> = { control: false, alt: false };
     let qualityIndex = qualityConfig.values.indexOf(quality);
 
-    function applySettings() {
-      video.playbackRate = rate;
-      player!.setPlaybackQualityRange(quality, quality);
+    function applySettings(targetQuality = quality, targetRate = rate) {
+      player!.setPlaybackQualityRange(targetQuality, targetQuality);
+      video.playbackRate = targetRate;
     }
 
     function changeQuality(quality: youtube.VideoQuality | undefined): void;
@@ -126,7 +126,7 @@ window.addEventListener("message", ((message) => {
           return applySettings();
         }
         displayText("YouBoost Disabled");
-        return restoreDefaults();
+        return applySettings(qualityConfig.default, rateConfig.default);
       }
 
       if (!enabled) return;
@@ -146,12 +146,7 @@ window.addEventListener("message", ((message) => {
     };
 
     function resetKeys() {
-      for (const key in modifierKeys) activeModifierKeys[key as ModifierKey] = false;
-    }
-
-    function restoreDefaults() {
-      video.playbackRate = rateConfig.default;
-      player!.setPlaybackQualityRange(qualityConfig.default, qualityConfig.default);
+      modifierKeys.forEach((key) => (activeModifierKeys[key] = false));
     }
 
     observeAdFinish();
