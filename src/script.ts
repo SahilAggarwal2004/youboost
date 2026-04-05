@@ -166,11 +166,12 @@ window.addEventListener("message", ((message) => {
     }
 
     const adObserver = observeAdFinish();
-    player.onblur = resetKeys;
+    window.addEventListener("blur", resetKeys);
     window.addEventListener("keydown", handleKeyPress);
     window.addEventListener("keyup", handleKeyPress);
     observePlayerRemoval(() => {
       adObserver.disconnect();
+      window.removeEventListener("blur", resetKeys);
       window.removeEventListener("keydown", handleKeyPress);
       window.removeEventListener("keyup", handleKeyPress);
     });
