@@ -5,6 +5,8 @@ export const actionKeys = ["<", ">", ",", ".", "w", "s", "a", "d", "arrowleft", 
 
 export const enableConfig = { default: true };
 
+export const interactiveElements = ["INPUT", "TEXTAREA"];
+
 export const matchPatterns = ["*://www.youtube.com/*"];
 
 export const modifierKeys = ["control", "alt"] as const;
