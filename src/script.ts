@@ -5,6 +5,7 @@ import { DataChangeHandler, Key, MessageEventListener, ModifierKey, Player } fro
 import { youboost } from "./types/youboost";
 import { youtube } from "./types/youtube";
 
+let cleanup: VoidFunction | undefined;
 let onDataChange: DataChangeHandler;
 
 window.addEventListener("message", ((message) => {
@@ -16,12 +17,13 @@ window.addEventListener("message", ((message) => {
   const { type, payload } = data;
   if (type === "dataChangedUI") onDataChange?.(payload);
   else if (type === "initData") {
+    cleanup?.();
+
     let { enabled, playbackStep, playerType, quality, rate, seekStep, volumeStep } = payload;
     let qualityIndex = qualityConfig.values.indexOf(quality);
     const player = document.getElementById(playerType) as Player;
     if (!player) return;
 
-    const availableQualities = player.getAvailableQualityLevels();
     const video = player.querySelector("video")!;
     const textElement = player.querySelector(".ytp-bezel-text") as HTMLDivElement;
     const textWrapper = textElement.parentElement!.parentElement as HTMLDivElement;
@@ -39,7 +41,7 @@ window.addEventListener("message", ((message) => {
     function changeQuality(quality: youtube.VideoQuality | number | undefined) {
       if (!enabled || quality == null) return;
 
-      const { default: defaultQuality, labels, total, values } = qualityConfig;
+      const { labels, total, values } = qualityConfig;
       if (typeof quality === "string") qualityIndex = values.indexOf(quality);
       else if (typeof quality === "number") {
         qualityIndex = (qualityIndex + quality + total) % total;
@@ -47,7 +49,6 @@ window.addEventListener("message", ((message) => {
       }
       postMessage({ type: "dataChangedKey", payload: { quality } });
       displayText(labels[quality]!);
-      if (!availableQualities.includes(quality)) quality = defaultQuality!;
       player!.setPlaybackQualityRange(quality, quality);
     }
 
@@ -120,20 +121,6 @@ window.addEventListener("message", ((message) => {
       return adObserver;
     }
 
-    function observePlayerRemoval(cleanup: VoidCallback) {
-      const removalObserver = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          mutation.removedNodes.forEach((node) => {
-            if (node === player) {
-              cleanup();
-              removalObserver.disconnect();
-            }
-          });
-        });
-      });
-      removalObserver.observe(player!.parentElement!, { childList: true });
-    }
-
     onDataChange = (data: youboost.partialData) => {
       if (data.enabled !== undefined) {
         enabled = data.enabled;
@@ -166,15 +153,16 @@ window.addEventListener("message", ((message) => {
     }
 
     const adObserver = observeAdFinish();
-    window.addEventListener("blur", resetKeys);
-    window.addEventListener("keydown", handleKeyPress);
-    window.addEventListener("keyup", handleKeyPress);
-    observePlayerRemoval(() => {
+    const controller = new AbortController();
+    window.addEventListener("blur", resetKeys, { signal: controller.signal });
+    window.addEventListener("keydown", handleKeyPress, { signal: controller.signal });
+    window.addEventListener("keyup", handleKeyPress, { signal: controller.signal });
+    window.addEventListener("visibilitychange", resetKeys, { signal: controller.signal });
+
+    cleanup = () => {
       adObserver.disconnect();
-      window.removeEventListener("blur", resetKeys);
-      window.removeEventListener("keydown", handleKeyPress);
-      window.removeEventListener("keyup", handleKeyPress);
-    });
+      controller.abort();
+    };
 
     if (enabled && !isShowingAd()) applySettings();
   }

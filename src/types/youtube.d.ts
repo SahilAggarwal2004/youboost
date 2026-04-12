@@ -1,6 +1,5 @@
 export namespace youtube {
   export interface Player {
-    getAvailableQualityLevels(): VideoQuality[];
     getVolume(): number;
     seekBy(seconds: number): void;
     setPlaybackQualityRange(qualityLow: VideoQuality, qualityHigh: VideoQuality): void;

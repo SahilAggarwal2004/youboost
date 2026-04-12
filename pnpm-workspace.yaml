@@ -3,4 +3,3 @@ onlyBuiltDependencies:
   - esbuild
 overrides:
   rollup@<2.80.0: '>=2.80.0'
-  yaml@>=2.0.0 <2.8.3: '>=2.8.3'
