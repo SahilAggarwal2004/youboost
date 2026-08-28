@@ -1,6 +1,6 @@
 import { youtube } from "./youtube";
 
-export namespace youboost {
+export namespace yttuner {
   export type data = {
     enabled: boolean;
     playbackStep: number;

@@ -7,7 +7,7 @@ import { postMessage } from "./lib/functions";
 import { getStorage, setData } from "./lib/storage";
 import scriptSrc from "./script?script&module";
 import { MessageEventListener } from "./types/global";
-import { youboost } from "./types/youboost";
+import { yttuner } from "./types/yttuner";
 import { youtube } from "./types/youtube";
 
 const script = document.createElement("script");
@@ -15,7 +15,7 @@ script.src = chrome.runtime.getURL(scriptSrc);
 script.type = "module";
 document.head.prepend(script);
 
-console.log("YouBoost activated");
+console.log("YT Tuner activated");
 
 async function dispatchInitData() {
   let playerType: youtube.PlayerType | undefined;
@@ -48,8 +48,8 @@ window.addEventListener("message", ((message) => {
   const { type, payload } = data;
   if (type !== "dataChangedKey") return;
 
-  chrome.runtime.sendMessage<youboost.partialData>(payload);
+  chrome.runtime.sendMessage<yttuner.partialData>(payload);
   setData(payload);
 }) as MessageEventListener);
 
-chrome.runtime.onMessage.addListener((detail: youboost.partialData) => postMessage({ type: "dataChangedUI", payload: detail }));
+chrome.runtime.onMessage.addListener((detail: yttuner.partialData) => postMessage({ type: "dataChangedUI", payload: detail }));

@@ -1,5 +1,5 @@
-import { source } from "../constants";
-import { GenerateLabel, MessageData, QualityLabels } from "../types/global";
+import { source } from "../constants.ts";
+import { GenerateLabel, MessageData, QualityLabels } from "../types/global.ts";
 import { youtube } from "../types/youtube";
 
 export const arrToOptions = (arr: number[], generateLabel: GenerateLabel) => arr.map((item) => ({ value: item, label: generateLabel(item) }));

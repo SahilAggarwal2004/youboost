@@ -1,19 +1,19 @@
 import { Listener } from "../types/global";
-import { youboost } from "../types/youboost";
+import { yttuner } from "../types/yttuner";
 
 let storageChangeListeners: Record<string, Listener> = {};
 
 const storageChangeListener = (changes: { [key: string]: chrome.storage.StorageChange }) => {
-  for (const key in changes) storageChangeListeners[key as youboost.dataKey]?.(changes[key]!.newValue);
+  for (const key in changes) storageChangeListeners[key as yttuner.dataKey]?.(changes[key]!.newValue);
 };
 
 chrome.storage.local.onChanged.addListener(storageChangeListener);
 
-export async function getStorage<K extends youboost.dataKey>(key: K, fallbackValue?: youboost.data[K]) {
-  return new Promise<youboost.data[K]>((resolve) => chrome.storage.local.get(key, (result) => resolve((result[key] ?? fallbackValue) as youboost.data[K])));
+export async function getStorage<K extends yttuner.dataKey>(key: K, fallbackValue?: yttuner.data[K]) {
+  return new Promise<yttuner.data[K]>((resolve) => chrome.storage.local.get(key, (result) => resolve((result[key] ?? fallbackValue) as yttuner.data[K])));
 }
 
-export function registerChangeListener<K extends youboost.dataKey>(key: K, listener: Listener<youboost.data[K]>) {
+export function registerChangeListener<K extends yttuner.dataKey>(key: K, listener: Listener<yttuner.data[K]>) {
   storageChangeListeners[key] = listener as Listener;
 }
 
@@ -24,7 +24,7 @@ export function revokeChangeListeners() {
   chrome.storage.local.onChanged.removeListener(storageChangeListener);
 }
 
-export async function setData({ enabled, playbackStep, quality, rate, seekStep, volumeStep }: youboost.partialData) {
+export async function setData({ enabled, playbackStep, quality, rate, seekStep, volumeStep }: yttuner.partialData) {
   if (enabled !== undefined) setStorage("enabled", enabled);
   if (playbackStep) setStorage("playbackStep", playbackStep);
   if (quality) setStorage("quality", quality);
@@ -33,6 +33,6 @@ export async function setData({ enabled, playbackStep, quality, rate, seekStep, 
   if (volumeStep) setStorage("volumeStep", volumeStep);
 }
 
-export function setStorage<K extends youboost.dataKey>(key: K, value: youboost.data[K]) {
+export function setStorage<K extends yttuner.dataKey>(key: K, value: yttuner.data[K]) {
   return chrome.storage.local.set({ [key]: value });
 }

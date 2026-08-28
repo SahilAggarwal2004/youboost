@@ -1,5 +1,5 @@
-import { createQualityConfig, createStepConfig, rateToLabel, timeToLabel, volumeToLabel } from "./lib/functions";
-import { QualityLabels } from "./types/global";
+import { createQualityConfig, createStepConfig, rateToLabel, timeToLabel, volumeToLabel } from "./lib/functions.ts";
+import { QualityLabels } from "./types/global.ts";
 
 export const actionKeys = ["<", ">", ",", ".", "w", "s", "a", "d", "arrowleft", "arrowright", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"] as const;
 
@@ -32,7 +32,7 @@ export const rateConfig = { default: 1, max: 4, min: 0.25 };
 
 export const seekStepConfig = createStepConfig([0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5], 2, timeToLabel);
 
-export const source = "youboost";
+export const source = "yt-tuner";
 
 export const volumeConfig = { max: 100, min: 0 };
 

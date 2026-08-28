@@ -1,6 +1,6 @@
-**YouBoost: Boost Your YouTube Experience**
+**YT Tuner: Tune Your YouTube Experience**
 
-Take your YouTube experience to the next level with YouBoost. This extension gives you precise control over video playback, allowing you to customize quality, speed, seeking, and volume behavior. Fine-tune everything to match your preferences and workflow.
+Take your YouTube experience to the next level with YT Tuner. This extension gives you precise control over video playback, allowing you to customize quality, speed, seeking, and volume behavior. Fine-tune everything to match your preferences and workflow.
 
 ### Features
 
@@ -20,4 +20,4 @@ Take your YouTube experience to the next level with YouBoost. This extension giv
 - Press **W/S** to increase or decrease volume.
 - Press **A/D** to seek backward or forward.
 
-Want to see the source code or contribute? Check out the GitHub repository: [https://github.com/SahilAggarwal2004/youboost](https://github.com/SahilAggarwal2004/youboost)
+Want to see the source code or contribute? Check out the GitHub repository: [https://github.com/SahilAggarwal2004/yt-tuner](https://github.com/SahilAggarwal2004/yt-tuner)

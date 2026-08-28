@@ -1,5 +1,5 @@
 import { actionKeys, modifierKeys, source } from "../constants";
-import { youboost } from "./youboost";
+import { yttuner } from "./yttuner";
 import { youtube } from "./youtube";
 
 // components/Header.tsx
@@ -24,16 +24,16 @@ export type Listener<T = unknown> = (value: T) => unknown;
 
 // inject.ts
 export type MessageData =
-  | { type: "dataChangedKey"; payload: youboost.partialData }
-  | { type: "dataChangedUI"; payload: youboost.partialData }
-  | { type: "initData"; payload: youboost.extendedData };
+  | { type: "dataChangedKey"; payload: yttuner.partialData }
+  | { type: "dataChangedUI"; payload: yttuner.partialData }
+  | { type: "initData"; payload: yttuner.extendedData };
 
 export type MessageEventListener = (event: MessageEvent<MessageData & { source: typeof source }>) => void;
 
 // script.ts
 export type ActionKey = (typeof actionKeys)[number];
 
-export type DataChangeHandler = (data: youboost.partialData) => void;
+export type DataChangeHandler = (data: yttuner.partialData) => void;
 
 export type Key = ActionKey | ModifierKey;
 

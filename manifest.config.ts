@@ -1,6 +1,7 @@
 import { defineManifest } from "@crxjs/vite-plugin";
-import packageJson from "./package.json";
-import { matchPatterns } from "./src/constants";
+import { matchPatterns } from "./src/constants.ts";
+
+import packageJson from "./package.json" with {type: "json"};
 
 const { version } = packageJson;
 
@@ -20,7 +21,7 @@ const icons = {
 
 export default defineManifest({
   manifest_version: 3,
-  name: "YouBoost",
+  name: "YT Tuner",
   version: `${major}.${minor}.${patch}`,
   // semver is OK in "version_name"
   version_name: version,
@@ -29,7 +30,7 @@ export default defineManifest({
   host_permissions: matchPatterns,
   icons,
   action: {
-    default_title: "YouBoost - Boost Your YouTube Experience",
+    default_title: "YT Tuner - Tune Your YouTube Experience",
     default_popup: "index.html",
     default_icon: icons,
   },
@@ -47,7 +48,7 @@ export default defineManifest({
         default: "Ctrl+Y",
         mac: "Command+Y",
       },
-      description: "Toggle YouBoost extension on/off",
+      description: "Toggle YT Tuner extension on/off",
     },
   },
 });

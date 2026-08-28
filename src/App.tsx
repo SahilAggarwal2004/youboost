@@ -4,7 +4,7 @@ import Select from "./components/Select";
 import { enableConfig, playbackStepConfig, qualityConfig, rateConfig, seekStepConfig, volumeStepConfig } from "./constants";
 import { arrToOptions, rateToLabel, round, timeToLabel, volumeToLabel } from "./lib/functions";
 import { getStorage, registerChangeListener, revokeChangeListeners, setData } from "./lib/storage";
-import { youboost } from "./types/youboost";
+import { yttuner } from "./types/yttuner";
 
 export default function App() {
   const [enabled, setEnabled] = useState(enableConfig.default);
@@ -25,7 +25,7 @@ export default function App() {
   }, [rate, playbackStep]);
   const rateOptions = useMemo(() => arrToOptions(rates, rateToLabel), [rates]);
 
-  function setState({ enabled, playbackStep, quality, rate, seekStep, volumeStep }: youboost.partialData) {
+  function setState({ enabled, playbackStep, quality, rate, seekStep, volumeStep }: yttuner.partialData) {
     if (enabled !== undefined) setEnabled(enabled);
     if (playbackStep) setPlaybackStep(playbackStep);
     if (quality) setQuality(quality);
@@ -34,11 +34,11 @@ export default function App() {
     if (volumeStep) setVolumeStep(volumeStep);
   }
 
-  function updateData(data: youboost.partialData) {
+  function updateData(data: yttuner.partialData) {
     setData(data);
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const { id } = tabs[0] ?? {};
-      if (id) chrome.tabs.sendMessage<youboost.partialData>(id, data);
+      if (id) chrome.tabs.sendMessage<yttuner.partialData>(id, data);
     });
     setState(data);
   }
@@ -63,10 +63,10 @@ export default function App() {
   return (
     <div className="p-3 pb-2 space-y-3 text-white text-sm">
       <div className="grid grid-cols-4 items-center px-2">
-        <img src="logo.webp" alt="YouBoost logo" width={60} />
+        <img src="logo.webp" alt="YT Tuner logo" width={60} />
         <div className="col-span-3 text-center">
-          <h2 className="text-lg">YouBoost</h2>
-          <h4 className="text-xs">Boost Your YouTube Experience</h4>
+          <h2 className="text-lg">YT Tuner</h2>
+          <h4 className="text-xs">Tune Your YouTube Experience</h4>
         </div>
       </div>
 

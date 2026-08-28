@@ -2,7 +2,7 @@
 import { interactiveElements, modifierKeys, qualityConfig, rateConfig, source, volumeConfig } from "./constants";
 import { postMessage, rateToLabel, round } from "./lib/functions";
 import { DataChangeHandler, Key, MessageEventListener, ModifierKey, Player } from "./types/global";
-import { youboost } from "./types/youboost";
+import { yttuner } from "./types/yttuner";
 import { youtube } from "./types/youtube";
 
 let cleanup: VoidFunction | undefined;
@@ -121,14 +121,14 @@ window.addEventListener("message", ((message) => {
       return adObserver;
     }
 
-    onDataChange = (data: youboost.partialData) => {
+    onDataChange = (data: yttuner.partialData) => {
       if (data.enabled !== undefined) {
         enabled = data.enabled;
         if (enabled) {
-          displayText("YouBoost Enabled");
+          displayText("YT Tuner Enabled");
           return applySettings();
         }
-        displayText("YouBoost Disabled");
+        displayText("YT Tuner Disabled");
         return applySettings(qualityConfig.default, rateConfig.default);
       }
 

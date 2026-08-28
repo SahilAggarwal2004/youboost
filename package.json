@@ -1,13 +1,13 @@
 {
-  "name": "youboost",
-  "version": "1.4.2",
+  "name": "yt-tuner",
+  "version": "1.4.3",
   "description": "A browser extension to enhance and customize your YouTube experience",
   "author": "Sahil Aggarwal <aggarwalsahil2004@gmail.com>",
   "license": "MIT",
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SahilAggarwal2004/youboost.git"
+    "url": "git+https://github.com/SahilAggarwal2004/yt-tuner.git"
   },
   "scripts": {
     "dev": "vite",
@@ -16,28 +16,28 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "react": "^19.2.5",
-    "react-dom": "^19.2.5",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
     "react-select": "^5.10.2"
   },
   "devDependencies": {
-    "@crxjs/vite-plugin": "2.4.0",
+    "@crxjs/vite-plugin": "2.7.1",
     "@eslint/js": "^10.0.1",
     "@ianvs/prettier-plugin-sort-imports": "^4.7.1",
-    "@tailwindcss/vite": "^4.2.2",
-    "@types/chrome": "^0.1.40",
-    "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^6.0.1",
-    "autoprefixer": "^10.4.27",
-    "eslint": "^10.2.0",
-    "eslint-plugin-react-hooks": "^7.0.1",
-    "eslint-plugin-react-refresh": "^0.5.2",
-    "globals": "^17.5.0",
-    "tailwindcss": "^4.2.2",
-    "typescript": "^6.0.2",
-    "typescript-eslint": "^8.58.1",
-    "vite": "^8.0.8",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/chrome": "^0.2.7",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.5",
+    "@vitejs/plugin-react": "^6.1.0",
+    "autoprefixer": "^10.5.4",
+    "eslint": "^10.9.1",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.5",
+    "globals": "^17.11.0",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^7.0.2",
+    "typescript-eslint": "^8.68.0",
+    "vite": "^8.2.2",
     "vite-plugin-zip-pack": "^1.2.4"
   }
 }
